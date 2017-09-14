@@ -53,6 +53,11 @@ public class Individual {
 		fitness = count;
 	}
 	
+	@Override
+	public String toString() {
+		return positions.toString() + " - " + fitness;
+	}
+	
 }
 
 

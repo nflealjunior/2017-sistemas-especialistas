@@ -17,7 +17,7 @@ public class StartApp {
 	}
 	
 	public void execute() {
-		random = new Random(7);
+		random = new Random();
 		
 		createInitialPopulation();
 		evaluate();
@@ -30,10 +30,36 @@ public class StartApp {
 			evaluate();
 			epoch++;
 		}
+		
+		System.out.println("A melhor resposta foi: " + bestIndividual.toString());
 	}
 
 	private void executeMutation() {
-		// TODO implements
+		int max = (int) (currentGeneration.size() * 0.02);
+		ArrayList<Integer> mutatedIndividualIndex = new ArrayList<Integer>();
+
+		for (int i = 0; i < max; i++) {
+			int index = random.nextInt(currentGeneration.size());
+			
+			while (mutatedIndividualIndex.contains(index)) {
+				index = random.nextInt(currentGeneration.size());
+			}
+			
+			mutatedIndividualIndex.add(index);
+			Individual individual = currentGeneration.get(index);
+			Vector<Integer> positions = individual.getPositions();
+			
+			int position = random.nextInt(8);
+			Integer oldValue = positions.get(position);
+			
+			if (oldValue == 8) {
+				oldValue = 1;
+			} else {
+				oldValue += 1;
+			}
+			
+			positions.set(position, oldValue);
+		}
 	}
 
 	private void executeCrossing() {
@@ -48,7 +74,29 @@ public class StartApp {
 			
 			int crossPoint = random.nextInt(5) + 1;
 			
+			Vector<Integer> positionChildOne = new Vector<Integer>();
 			
+			positionChildOne.addAll(
+					positionsIndividualOne.subList(0, crossPoint));
+			
+			positionChildOne.addAll(
+					positionsIndividualTwo.subList(
+							crossPoint, positionsIndividualTwo.size()));
+			
+			Vector<Integer> positionChildTwo = new Vector<Integer>();
+			
+			positionChildTwo.addAll(
+					positionsIndividualTwo.subList(0, crossPoint));
+			
+			positionChildTwo.addAll(
+					positionsIndividualOne.subList(
+							crossPoint, positionsIndividualOne.size()));
+			
+			
+			Individual childOne = new Individual(positionChildOne);
+			Individual childTwo = new Individual(positionChildTwo);
+			nextGeneration.add(childOne);
+			nextGeneration.add(childTwo);
 		}		
 	}
 	
